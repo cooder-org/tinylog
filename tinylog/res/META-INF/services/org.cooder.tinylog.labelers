@@ -1,0 +1,3 @@
+org.cooder.tinylog.labelers.CountLabeler
+org.cooder.tinylog.labelers.TimestampLabeler
+org.cooder.tinylog.labelers.ProcessIdLabeler

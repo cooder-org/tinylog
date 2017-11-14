@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.cooder.tinylog</groupId>
+		<artifactId>parent</artifactId>
+		<version>1.2.1-SNAPSHOT</version>
+	</parent>
+	
+	<artifactId>tinylog-core</artifactId>
+	<name>tinylog Core</name>
+	<description>Shared basis for tinylog and compatible server replacements</description>
+	<url>${website.url}</url>
+	
+	<properties>
+		<maven.deploy.skip>true</maven.deploy.skip>
+		<checkstyle.skip>false</checkstyle.skip>
+		<spotbugs.skip>false</spotbugs.skip>
+	</properties>
+	
+	<dependencies>
+		<dependency>
+			<groupId>com.google.android</groupId>
+			<artifactId>android</artifactId>
+			<version>${android.version}</version>
+			<optional>true</optional>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jmockit</groupId>
+			<artifactId>jmockit</artifactId>
+			<version>${jmockit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-library</artifactId>
+			<version>${hamcrest.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<scm>
+		<url>${git.url}</url>
+		<connection>${git.connection}</connection>
+		<developerConnection>${git.developerConnection}</developerConnection>
+	</scm>
+
+	<build>
+		<plugins>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>animal-sniffer-maven-plugin</artifactId>
+				<configuration>
+					<ignores>
+						<!-- Ignore classes that are used in org.cooder.tinylog.runtime.ModernJavaRuntime -->
+						<ignore>java.lang.ProcessHandle</ignore>
+						<ignore>java.lang.StackWalker</ignore>
+						<ignore>java.lang.StackWalker$StackFrame</ignore>
+						<ignore>java.util.stream.Stream</ignore>
+						<ignore>java.util.Optional</ignore>
+						<!-- Ignore classes that are used in org.cooder.tinylog.runtime.LegacyJavaRuntime -->
+						<ignore>sun.reflect.Reflection</ignore>
+					</ignores>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>test-jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<configuration>
+					<instructions>
+						<Import-Package>!*</Import-Package>
+						<Export-Package>org.cooder.tinylog, org.pmw.runtime</Export-Package>
+					</instructions>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			
+		</plugins>
+	</build>
+
+</project>

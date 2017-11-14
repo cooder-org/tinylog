@@ -1,0 +1,8 @@
+org.cooder.tinylog.policies.StartupPolicy
+org.cooder.tinylog.policies.CountPolicy
+org.cooder.tinylog.policies.SizePolicy
+org.cooder.tinylog.policies.HourlyPolicy
+org.cooder.tinylog.policies.DailyPolicy
+org.cooder.tinylog.policies.WeeklyPolicy
+org.cooder.tinylog.policies.MonthlyPolicy
+org.cooder.tinylog.policies.YearlyPolicy

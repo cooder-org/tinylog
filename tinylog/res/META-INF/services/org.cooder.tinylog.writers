@@ -1,0 +1,6 @@
+org.cooder.tinylog.writers.ConsoleWriter
+org.cooder.tinylog.writers.FileWriter
+org.cooder.tinylog.writers.JdbcWriter
+org.cooder.tinylog.writers.LogcatWriter
+org.cooder.tinylog.writers.RollingFileWriter
+org.cooder.tinylog.writers.SharedFileWriter
