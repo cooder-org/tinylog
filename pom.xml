@@ -55,10 +55,10 @@
 		<!-- Avoid inlining (it breaks mocks) allow agents to attach themselves and open required packages for mocking via JMockit -->
 		<argLine>-XX:-Inline -Djdk.attach.allowAttachSelf --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/jdk.internal.loader=ALL-UNNAMED</argLine>
 
-		<website.url>http://www.tinylog.org/</website.url>
-		<git.url>https://github.com/nil4u/tinylog</git.url>
-		<git.connection>scm:git:github.com/nil4u/tinylog.git</git.connection>
-		<git.developerConnection>scm:git:git@github.com:nil4u/tinylog.git</git.developerConnection>
+		<website.url>http://www.cooder.org/tinylog/</website.url>
+		<git.url>https://github.com/cooder-org/tinylog</git.url>
+		<git.connection>scm:git:github.com:cooder-org/tinylog.git</git.connection>
+		<git.developerConnection>scm:git:git@github.com:cooder-org/tinylog.git</git.developerConnection>
 	</properties>
 
 	<licenses>
@@ -74,7 +74,7 @@
 			<email>martin.winandy@tinylog.org</email>
 		</developer>
 		<developer>
-			<name>nil</name>
+			<name>yanxiyue</name>
 			<email>wuling@cooder.org</email>
 		</developer>
 	</developers>
@@ -87,7 +87,7 @@
 
 	<issueManagement>
 		<system>GitHub</system>
-		<url>https://github.com/nil4u/tinylog/issues</url>
+		<url>https://github.com/cooder-org/tinylog/issues</url>
 	</issueManagement>
 
 	<distributionManagement>
@@ -281,7 +281,7 @@
 					<archive>
 						<manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
 						<manifestEntries>
-							<Built-By>tinylog.org</Built-By>
+							<Built-By>cooder.org</Built-By>
 						</manifestEntries>
 						<addMavenDescriptor>false</addMavenDescriptor>
 					</archive>
@@ -335,11 +335,11 @@
 				<configuration>
 					<archive>
 						<manifestEntries>
-							<Built-By>tinylog.org</Built-By>
+							<Built-By>cooder.org</Built-By>
 							<Bundle-ManifestVersion>2</Bundle-ManifestVersion>
 							<Bundle-Name>${project.name}</Bundle-Name>
 							<Bundle-SymbolicName>org.cooder.${project.artifactId}.source</Bundle-SymbolicName>
-							<Bundle-Vendor>tinylog.org</Bundle-Vendor>
+							<Bundle-Vendor>cooder.org</Bundle-Vendor>
 							<Bundle-Version>${parsedVersion.osgiVersion}</Bundle-Version>
 							<Eclipse-SourceBundle>org.cooder.${project.artifactId};version="${parsedVersion.osgiVersion}";roots:="."</Eclipse-SourceBundle>
 						</manifestEntries>
@@ -361,7 +361,7 @@
 				<configuration>
 					<archive>
 						<manifestEntries>
-							<Built-By>tinylog.org</Built-By>
+							<Built-By>cooder.org</Built-By>
 						</manifestEntries>
 					</archive>
 				</configuration>
