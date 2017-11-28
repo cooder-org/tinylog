@@ -13,7 +13,9 @@
 
 package org.cooder.tinylog.writers;
 
-import static org.hamcrest.Matchers.contains;
+import static org.cooder.tinylog.hamcrest.ClassMatchers.type;
+import static org.cooder.tinylog.hamcrest.CollectionMatchers.types;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.empty;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -22,8 +24,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.cooder.tinylog.hamcrest.ClassMatchers.type;
-import static org.cooder.tinylog.hamcrest.CollectionMatchers.types;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -34,8 +34,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 import org.cooder.tinylog.Configuration;
 import org.cooder.tinylog.labelers.CountLabeler;
 import org.cooder.tinylog.labelers.Labeler;
@@ -50,6 +48,8 @@ import org.cooder.tinylog.util.FileHelper;
 import org.cooder.tinylog.util.LogEntryBuilder;
 import org.cooder.tinylog.util.LoopWritingThread;
 import org.cooder.tinylog.util.PropertiesBuilder;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import mockit.Mock;
 import mockit.MockUp;
@@ -174,7 +174,7 @@ public class RollingFileWriterTest extends AbstractWriterTest {
 
 		RollingFileWriter writer = new RollingFileWriter(file.getAbsolutePath(), 0);
 		Set<LogEntryValue> requiredLogEntryValues = writer.getRequiredLogEntryValues();
-		assertThat(requiredLogEntryValues, contains(LogEntryValue.RENDERED_LOG_ENTRY));
+		assertThat(requiredLogEntryValues, containsInAnyOrder(LogEntryValue.RENDERED_LOG_ENTRY, LogEntryValue.CLASS));
 
 		file.delete();
 	}

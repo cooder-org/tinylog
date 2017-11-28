@@ -38,7 +38,8 @@ import org.cooder.tinylog.policies.StartupPolicy;
  */
 @PropertiesSupport(name = "rollingfile", properties = { @Property(name = "filename", type = String.class), @Property(name = "backups", type = int.class),
 		@Property(name = "buffered", type = boolean.class, optional = true), @Property(name = "label", type = Labeler.class, optional = true),
-		@Property(name = "policies", type = Policy[].class, optional = true) })
+		@Property(name = "policies", type = Policy[].class, optional = true),
+		@Property(name = "clazz", type = String.class, optional = true) })
 public final class RollingFileWriter implements Writer {
 
 	private static final int BUFFER_SIZE = 64 * 1024;
@@ -48,6 +49,7 @@ public final class RollingFileWriter implements Writer {
 	private final boolean buffered;
 	private final Labeler labeler;
 	private final List<? extends Policy> policies;
+	private String clazz;
 
 	private final Object mutex;
 	private File file;
@@ -64,7 +66,23 @@ public final class RollingFileWriter implements Writer {
 	 * @see org.cooder.tinylog.policies.StartupPolicy
 	 */
 	public RollingFileWriter(final String filename, final int backups) {
-		this(filename, backups, false, null, (Policy[]) null);
+		this(filename, backups, false, null, null, (Policy[]) null);
+	}
+	
+	/**
+	 * Rolling log files once at startup.
+	 *
+	 * @param filename
+	 *            Filename of the log file
+	 * @param backups
+	 *            Number of backups
+	 * @param clazz
+	 *            package or class for output
+	 *
+	 * @see org.cooder.tinylog.policies.StartupPolicy
+	 */
+	public RollingFileWriter(final String filename, final int backups, final String clazz) {
+		this(filename, backups, false, null, clazz, (Policy[]) null);
 	}
 
 	/**
@@ -80,7 +98,7 @@ public final class RollingFileWriter implements Writer {
 	 * @see org.cooder.tinylog.policies.StartupPolicy
 	 */
 	public RollingFileWriter(final String filename, final int backups, final boolean buffered) {
-		this(filename, backups, buffered, null, (Policy[]) null);
+		this(filename, backups, buffered, null, null, (Policy[]) null);
 	}
 
 	/**
@@ -96,7 +114,7 @@ public final class RollingFileWriter implements Writer {
 	 * @see org.cooder.tinylog.policies.StartupPolicy
 	 */
 	public RollingFileWriter(final String filename, final int backups, final Labeler labeler) {
-		this(filename, backups, false, labeler, (Policy[]) null);
+		this(filename, backups, false, labeler, null, (Policy[]) null);
 	}
 
 	/**
@@ -114,7 +132,7 @@ public final class RollingFileWriter implements Writer {
 	 * @see org.cooder.tinylog.policies.StartupPolicy
 	 */
 	public RollingFileWriter(final String filename, final int backups, final boolean buffered, final Labeler labeler) {
-		this(filename, backups, buffered, labeler, (Policy[]) null);
+		this(filename, backups, buffered, labeler, null, (Policy[]) null);
 	}
 
 	/**
@@ -126,7 +144,7 @@ public final class RollingFileWriter implements Writer {
 	 *            Rollover strategies
 	 */
 	public RollingFileWriter(final String filename, final int backups, final Policy... policies) {
-		this(filename, backups, false, null, policies);
+		this(filename, backups, false, null, null, policies);
 	}
 
 	/**
@@ -140,7 +158,7 @@ public final class RollingFileWriter implements Writer {
 	 *            Rollover strategies
 	 */
 	public RollingFileWriter(final String filename, final int backups, final boolean buffered, final Policy... policies) {
-		this(filename, backups, buffered, null, policies);
+		this(filename, backups, buffered, null, null, policies);
 	}
 
 	/**
@@ -154,9 +172,9 @@ public final class RollingFileWriter implements Writer {
 	 *            Rollover strategies
 	 */
 	public RollingFileWriter(final String filename, final int backups, final Labeler labeler, final Policy... policies) {
-		this(filename, backups, false, labeler, policies);
+		this(filename, backups, false, labeler, null, policies);
 	}
-
+	
 	/**
 	 * @param filename
 	 *            Filename of the log file
@@ -170,17 +188,37 @@ public final class RollingFileWriter implements Writer {
 	 *            Rollover strategies
 	 */
 	public RollingFileWriter(final String filename, final int backups, final boolean buffered, final Labeler labeler, final Policy... policies) {
+		this(filename, backups, buffered, labeler, null, policies);
+	}
+
+	/**
+	 * @param filename
+	 *            Filename of the log file
+	 * @param backups
+	 *            Number of backups
+	 * @param buffered
+	 *            Buffered writing
+	 * @param labeler
+	 *            Labeler for naming backups
+	 * @param clazz
+	 *            package or class for output
+	 * @param policies
+	 *            Rollover strategies
+	 */
+	public RollingFileWriter(final String filename, final int backups, final boolean buffered, 
+			final Labeler labeler,  final String clazz, final Policy... policies) {
 		this.mutex = new Object();
 		this.filename = PathResolver.resolve(filename);
 		this.backups = Math.max(0, backups);
 		this.buffered = buffered;
 		this.labeler = labeler == null ? new CountLabeler() : labeler;
+		this.clazz = clazz;
 		this.policies = policies == null || policies.length == 0 ? Arrays.asList(new StartupPolicy()) : Arrays.asList(policies);
 	}
 
 	@Override
 	public Set<LogEntryValue> getRequiredLogEntryValues() {
-		return EnumSet.of(LogEntryValue.RENDERED_LOG_ENTRY);
+		return EnumSet.of(LogEntryValue.RENDERED_LOG_ENTRY, LogEntryValue.CLASS);
 	}
 
 	/**
@@ -219,6 +257,25 @@ public final class RollingFileWriter implements Writer {
 	 */
 	public Labeler getLabeler() {
 		return labeler;
+	}
+	
+	/**
+	 * Get package or class for output.
+	 * 
+	 * @return package or class for output
+	 */
+	public String getClazz() {
+		return clazz;
+	}
+
+	/**
+	 * Set package or class for output.
+	 * 
+	 * @param clazz
+	 *            package or class for output
+	 */
+	public void setClazz(final String clazz) {
+		this.clazz = clazz;
 	}
 
 	/**
@@ -260,6 +317,11 @@ public final class RollingFileWriter implements Writer {
 
 	@Override
 	public void write(final LogEntry logEntry) throws IOException {
+		String clazzName = logEntry.getClassName();
+		if (clazz != null && clazzName != null && !clazzName.startsWith(clazz)) {
+			return;
+		}
+		
 		String rendered = logEntry.getRenderedLogEntry();
 		byte[] data = rendered.getBytes();
 		
